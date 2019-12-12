@@ -26,7 +26,7 @@ const storage = {
 			chrome.storage.sync.set(obj, res)
 		})
 }
-const defaultRPC = [{ name: 'ARIA2 RPC', url: 'http://localhost:6800/jsonrpc' }]
+const defaultRPC = [{ name: 'ARIA2 RPC', url: 'http://localhost:6800/jsonrpc', token: '' }]
 const dedupe = arr => Array.from(new Set(arr))
 Vue.component('rpc', {
 	template: '#rpc',

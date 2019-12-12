@@ -27,7 +27,7 @@ const storage = {
 			chrome.storage.sync.set(obj, res)
 		})
 }
-const defaultRPC = [{ name: 'ARIA2 RPC', url: 'http://localhost:6800/jsonrpc' }]
+const defaultRPC = [{ name: 'ARIA2 RPC', url: 'http://localhost:6800/jsonrpc', token: '' }]
 function timeout(ms) {
 	return new Promise((res, rej) => setTimeout(rej, ms))
 }
@@ -60,7 +60,7 @@ function parse_url(url) {
 	return [url_path, auth]
 }
 
-function aria2Send(link, rpcUrl, downloadItem) {
+function aria2Send(link, rpcUrl, rpcToken, downloadItem) {
 	let filename = null
 	let referrer = null
 	let cookiesLink = null
@@ -95,6 +95,7 @@ function aria2Send(link, rpcUrl, downloadItem) {
 				method: 'aria2.addUri',
 				id: new Date().getTime(),
 				params: [
+					"token:"+rpcToken,
 					[link],
 					{
 						header: header,
@@ -200,9 +201,9 @@ downloadListener.addListener(async (downloadItem, suggestion) => {
 		} else {
 			const rpc_list = await storage.get('rpc_list', defaultRPC)
 			if (await storage.get('finalUrl')) {
-				aria2Send(downloadItem.finalUrl, rpc_list[0]['url'], downloadItem)
+				aria2Send(downloadItem.finalUrl, rpc_list[0]['url'], rpc_list[0]['token'],downloadItem)
 			} else {
-				aria2Send(downloadItem.url, rpc_list[0]['url'], downloadItem)
+				aria2Send(downloadItem.url, rpc_list[0]['url'], rpc_list[0]['token'],downloadItem)
 			}
 		}
 	}
